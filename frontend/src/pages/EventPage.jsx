@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Loading from "../compnents/Loading"
 import Navbar from "../compnents/Navbar"
@@ -7,21 +7,56 @@ import { FaCalendarAlt, FaEdit } from 'react-icons/fa';
 import { FaLocationDot } from 'react-icons/fa6';
 import { AiFillDelete } from 'react-icons/ai'
 import Comment from "../compnents/Comment"
-import { getIdFromCookie, getRoleFromCookie } from "../lib/auth"
-import { deleteEvent } from "../controller/controller"
+import { getIdFromCookie,getUserFromCookie, getRoleFromCookie } from "../lib/auth"
+import { deleteEvent , addComment} from "../controller/controller"
 import { Link } from "react-router-dom"
-// import {auth} from "../Context/auth"
 
 
 function EventPage() {
-  // const use= useContext(auth)
+  const postComment = []
   const param = useParams()
+
+
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [image, setImage] = useState(null)
   const [comments, setComment] = useState([])
-  const [comment, setCommentText] = useState('')
+  const [commentText, setCommentText] = useState('')
+  const [commentData, setCommentData] = useState({
+    userName: getUserFromCookie(),
+    description:'',
+  
+  })
+
+
+
+
+  const handleChange = (e) => {
+    setCommentText(e.target.value)
+    setCommentData({
+      ...commentData,
+      description: e.target.value
+    })
+    
+  }
+  const handleSubmit =  (e) => {
+    e.preventDefault()
+    for(let i=0;i<comments.length;i++){
+      postComment.push({
+        userName: comments[i].userName,
+        description: comments[i].description
+      })
+    }
+
+    postComment.push(commentData)
+
+    setCommentText('')
+    console.log(postComment)
+    addComment(param.id,postComment)
+  }
+
+  
   const imageLink = `http://localhost:1337${image}`
   useEffect(() => {
     const fetchEvent = async () => {
@@ -29,7 +64,7 @@ function EventPage() {
         const res = await fetch(`http://localhost:1337/api/events/${param.id}?populate=*`)
         const data = await res.json()
         setData(data)
-        setComment(data.data.attributes.comments.data)
+        setComment(data.data.attributes.comment)
         setImage(data.data.attributes.posterLink.data.attributes.url)
 
       }
@@ -47,6 +82,7 @@ function EventPage() {
   return (
 
     <>
+    
       {
         loading && !error ? <Loading /> : <>
 
@@ -54,10 +90,9 @@ function EventPage() {
           <div className="mx-2 sm:mx-20">
             <div className="sm:text-3xl py-5 flex justify-between">
               <p>{data.data.attributes.name}</p>
-              <div className="flex gap-5">
+              <div className="flex hover:cursor-pointer gap-5">
                 {getRoleFromCookie() === 'true' ?
                   <>
-                    <FaEdit className="sm:text-2xl" />
                     <AiFillDelete onClick={() => {
                       deleteEvent(param.id);
                     }} className="sm:text-2xl" />
@@ -88,12 +123,11 @@ function EventPage() {
             </div>
             <div>
               <div className="text-2xl font-bold py-5">Comments ({comments.length})</div>
-              {console.log(comments)}
               {comments ? <>
                 <>
                   {
                     comments.map((comment) => (
-                      <Comment name={comment.attributes.userName} comment={comment.attributes.text} date={comment.attributes.createdAt} key={comment.id} />
+                      <Comment name={comment.userName} comment={comment.description}  key={comment.id} />
                     ))
                   }
                 </>
@@ -104,13 +138,13 @@ function EventPage() {
           <div className="flex flex-col items-center">
           <div>
 
-            <label for="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your message</label>
-            <textarea id="message" rows="4" name="comment" value={comment} onChange={(e)=>{
-              setCommentText(e.target.value)
-            }} className="block p-2.5 sm:w-[500px]  text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+            <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your message</label>
+            <textarea id="message" rows="4" name="comment" value={commentText} onChange={(e)=>
+            handleChange(e)
+            } className="block p-2.5 sm:w-[500px]  text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
 
           </div>
-          <button className="bg-black text-white font-bold p-2 my-10 rounded-lg">Add comment</button>
+          <button className="bg-black text-white font-bold p-2 my-10 rounded-lg" onClick={handleSubmit} >Add comment</button>
         </div>:
         <h1 className="text-xl flex flex-col items-center my-10 ">
           Please login or register to comment
@@ -127,5 +161,6 @@ function EventPage() {
     </>
   )
 }
+
 
 export default EventPage

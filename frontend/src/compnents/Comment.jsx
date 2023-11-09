@@ -1,7 +1,7 @@
 
 function Comment({name,comment,date}) {
-    const dateObj = new Date(date)
-    const dateStr = dateObj.toDateString()
+    // const dateObj = new Date(date)
+    // const dateStr = dateObj.toDateString()
     const fl = name.charAt(0).toUpperCase()
   return (
     <>
@@ -17,10 +17,6 @@ function Comment({name,comment,date}) {
 
                 <div>
                     {comment}
-                </div>
-
-                <div>
-                    <span>{dateStr}</span>
                 </div>
             </div>
     </>

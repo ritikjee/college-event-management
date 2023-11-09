@@ -3,7 +3,6 @@ import EventPage from "./pages/EventPage";
 import About from "./pages/About";
 import LoginPage from "./pages/LoginPage";
 import Register from "./pages/Register";
-
 import {BrowserRouter as Router, Routes,Route} from 'react-router-dom';
 
 
