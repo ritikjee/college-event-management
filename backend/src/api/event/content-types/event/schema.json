@@ -38,15 +38,15 @@
       "repeatable": false,
       "component": "events.event-dates"
     },
-    "comments": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::comment.comment",
-      "mappedBy": "event"
-    },
     "location": {
       "type": "string",
       "required": true
+    },
+    "comment": {
+      "displayName": "comments",
+      "type": "component",
+      "repeatable": true,
+      "component": "events.comments"
     }
   }
 }

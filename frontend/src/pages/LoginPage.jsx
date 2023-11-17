@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Image from "../assets/illustration.svg";
+import { FaEye } from "react-icons/fa";
 import { setToken } from "../lib/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -50,11 +50,7 @@ function Loginpage() {
     <>
       <div className=" bg-gray-50 h-screen ">
         <div className=" flex  md:pt-10 bg-gray-50 justify-center">
-          <img
-            src={Image}
-            alt="f"
-            className=" hidden md:block lg:rounded-l-2xl md:w-[350px] lg:w-[500px]"
-          />
+          
 
           <div className=" md:w-[350px] lg:w-[500px] bg-white lg:rounded-r-2xl lg:p-16 p-4 pt-10  max-[400px] shadow-2xl">
             <h1 className="font-poppins text-2xl md:text-4xl font-bold pb-5">
@@ -87,12 +83,11 @@ function Loginpage() {
                 onChange={handleChange}
                 required
               />
-              <img
-                src=""
-                alt="show"
-                className="pr-2"
-                onClick={showPassword}
-              />
+             <FaEye className="text-3xl pr-2"
+             onClick={()=>{
+                showPassword(!show)  
+             }}
+             />
             </div>
             <div className="w-full mt-4">
               <button

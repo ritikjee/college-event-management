@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import Loading from "../compnents/Loading"
 import Navbar from "../compnents/Navbar"
 import Footer from "../compnents/Footer"
-import { FaCalendarAlt, FaEdit } from 'react-icons/fa';
+import { FaCalendarAlt } from 'react-icons/fa';
 import { FaLocationDot } from 'react-icons/fa6';
 import { AiFillDelete } from 'react-icons/ai'
 import Comment from "../compnents/Comment"
@@ -78,6 +78,7 @@ function EventPage() {
 
 
     fetchEvent()
+    // eslint-disable-next-line
   }, [])
   return (
 

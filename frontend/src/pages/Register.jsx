@@ -1,23 +1,43 @@
 import React, { useState } from "react";
+import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Image from "../assets/illustration.svg";
+import { setToken } from "../lib/auth";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Register() {
   const [formData, setFormData] = useState({
+    username:"",
     email: "",
     password: "",
   });
 
-  let name, value;
+
   const handleChange = (e) => {
-    name = e.target.name;
-    value = e.target.value;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+    const response = await fetch("http://localhost:1337/api/auth/local/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(
+       formData
+      ),
+    });
+    const data = await response.json();
+
+    setToken(data);
+    window.location.href = "/";
+  }
+  catch(err){
+    console.log(err)
+    toast.error("Invalid Credentials")
+  }
   };
 
   const [show, setShow] = useState(false);
@@ -28,15 +48,10 @@ function Register() {
     <>
       <div className=" bg-gray-50">
         <div className=" flex bg-gray-50  md:pt-10 justify-center">
-          <img
-            src={Image}
-            alt="f"
-            className=" hidden md:block lg:rounded-l-2xl md:w-[350px] lg:w-[500px]"
-          />
 
           <div className=" md:w-[350px] lg:w-[500px] bg-white lg:rounded-r-2xl lg:p-16 p-4 pt-10  max-[400px] shadow-2xl">
             <h1 className="font-poppins text-2xl md:text-4xl font-bold pb-5">
-              Login to your account
+              Welcome to T&P Portal
             </h1>
             <p className="font-poppins md:text-xl  pb-4">
               Welcome back! Please enter your credentials to access your
@@ -46,7 +61,8 @@ function Register() {
             <div className="flex flex-row border-gray-400 placeholder:text-[#667086] placeholder:text-[16px]  border-[0.5px] mt-2 rounded-[5px]">
               <input
                 type="text"
-                name="name"
+                name="username"
+                value={formData.username}
                 placeholder="Enter your name"
                 className="w-full p-2 px-6 py-2 rounded placeholder:text-[#667086]"
                 onChange={handleChange}
@@ -58,6 +74,7 @@ function Register() {
               <input
                 type="email"
                 name="email"
+                value={formData.email}
                 placeholder="Enter your email"
                 className="w-full p-2 px-6 py-2 rounded placeholder:text-[#667086]"
                 onChange={handleChange}
@@ -66,22 +83,20 @@ function Register() {
             </div>
 
             <div className="mt-3">Password</div>
-            <div className="flex flex-row border-gray-400 placeholder:text-[#667086] placeholder:text-[16px]  border-[0.5px] mt-2 rounded-[5px]">
+            <div className="flex flex-row border-gray-400 items-center placeholder:text-[#667086] placeholder:text-[16px]  border-[0.5px] mt-2 rounded-[5px]">
               <input
                 type={show ? "text" : "password"}
                 name="password"
+                value={formData.password}
                 placeholder="Enter your Password"
                 className="w-full p-2 px-6 py-2 rounded placeholder:text-[#667086]"
                 width="90vw"
                 onChange={handleChange}
                 required
               />
-              <img
-                src=""
-                alt="show"
-                className="pr-2"
-                onClick={showPassword}
-              />
+              <FaEye className="text-3xl pr-2" onClick={()=>{
+                showPassword(!show)
+              }}/>
             </div>
 
 
@@ -91,6 +106,7 @@ function Register() {
                 onClick={handleSubmit}
               >
                 Sign Up
+                <ToastContainer/>
               </button>
             </div>
             <div>
