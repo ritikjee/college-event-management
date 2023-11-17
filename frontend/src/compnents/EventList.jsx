@@ -1,4 +1,5 @@
 import EventItem from "./EventItem"
+import bgImage from '../assets/bgImage.jpg'
 
 function EventList({events}) {
   
@@ -6,7 +7,8 @@ function EventList({events}) {
     <>
 {
     events.map((event)=>(
-        <EventItem id={event.id} key={event.id} title={event.attributes.name} description={event.attributes.description} location={event.attributes.location} startDate={event.attributes.date.startDate} endDate={event.attributes.date.endDate} posterLink={`http://localhost:1337${event.attributes.posterLink.data.attributes.url}`} />
+
+        <EventItem id={event.id} key={event.id} title={event.attributes.name} description={event.attributes.description} location={event.attributes.location} startDate={event.attributes.date.startDate} endDate={event.attributes.date.endDate} posterLink={!(event.attributes.posterLink.data===null)?`http://localhost:1337${event.attributes.posterLink.data.attributes.url}`:bgImage} />
     ))
 }
     </>

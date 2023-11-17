@@ -1,6 +1,7 @@
 import { FaCalendarAlt } from 'react-icons/fa';
 import { FaLocationDot } from 'react-icons/fa6';
 import dateCompare from '../helper/dateCompare'
+import bgImage from '../assets/bgImage.jpg'
 
 
 function EventItem({startDate,endDate,location,description,posterLink,title,id}) {
@@ -21,7 +22,7 @@ function EventItem({startDate,endDate,location,description,posterLink,title,id})
     
     <>
       <div className="flex justify-center items-center sm:items-start sm:flex-row flex-col sm:m-10 my-10 " >
-        <img src={posterLink} className="w-[300px] h-[400px] rounded-l-md " alt="posterLink" />
+        <img src={posterLink?posterLink:bgImage} className="w-[300px] h-[400px] rounded-l-md " alt="posterLink" />
         <div className="w-[300px] sm:w-[600px] py-2 sm:px-10  sm:h-[400px] " style={abc}>
           <p className='font-bold'>
             {status}
